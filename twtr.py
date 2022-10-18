@@ -23,6 +23,19 @@ from pymongo import MongoClient
 # mongo
 #mongo_client = MongoClient('mongodb://localhost:27017/')
 mongo_client = MongoClient("mongodb+srv://admin:admin@tweets.8ugzv.mongodb.net/tweets?retryWrites=true&w=majority")
+class MyMongo(object):
+    def __init__(self, db_name):
+        self.db_name = db_name
+     
+    def __enter__(self):
+        # 'client' is global created above
+        self.db = mongo_client[self.db_name]
+        return self.db
+ 
+    def __exit__(self, p1, p2, p3):
+        # do not close the global handle!
+        #client.close()
+        pass
 
 app = Flask(__name__)
 CORS(app)
@@ -55,9 +68,9 @@ def atlas_connect():
 # database access layer
 def insert_one(r):
     start_time = datetime.now()
-    with mongo_client:
+    with MyMongo('tweets') as db:
         #start_time_db = datetime.now()
-        db = mongo_client['tweets']
+        #db = mongo_client['tweets']
         #microseconds_caching_db = (datetime.now() - start_time_db).microseconds
         #print("*** It took " + str(microseconds_caching_db) + " microseconds to cache mongo handle.")
 
@@ -75,9 +88,9 @@ def insert_one(r):
 
 def update_one(r):
     start_time = datetime.now()
-    with mongo_client:
+    with MyMongo('tweets') as db:
         #start_time_db = datetime.now()
-        db = mongo_client['tweets']
+        #db = mongo_client['tweets']
         #microseconds_caching_db = (datetime.now() - start_time_db).microseconds
         #print("*** It took " + str(microseconds_caching_db) + " microseconds to cache mongo handle.")
 
@@ -98,9 +111,9 @@ def update_one(r):
 
 def insert_many(r):
     start_time = datetime.now()
-    with mongo_client:
+    with MyMongo('tweets') as db:
         #start_time_db = datetime.now()
-        db = mongo_client['tweets']
+        #db = mongo_client['tweets']
         #microseconds_caching_db = (datetime.now() - start_time_db).microseconds
         #print("*** It took " + str(microseconds_caching_db) + " microseconds to cache mongo handle.")
 
@@ -118,9 +131,9 @@ def insert_many(r):
 
 def update_many(r):
     start_time = datetime.now()
-    with mongo_client:
+    with MyMongo('tweets') as db:
         #start_time_db = datetime.now()
-        db = mongo_client['tweets']
+        #db = mongo_client['tweets']
         #microseconds_caching_db = (datetime.now() - start_time_db).microseconds
         #print("*** It took " + str(microseconds_caching_db) + " microseconds to cache mongo handle.")
 
@@ -324,8 +337,8 @@ def applyRecordLevelUpdates():
 
 def applyCollectionLevelUpdates():
     global tweets
-    with mongo_client:
-        db = mongo_client['tweets']
+    with MyMongo('tweets') as db:
+        #db = mongo_client['tweets']
         mongo_collection = db['tweets']
 
         cursor = mongo_collection.find({})

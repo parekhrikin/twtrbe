@@ -22,7 +22,7 @@ from pymongo import MongoClient
 
 # mongo
 #mongo_client = MongoClient('mongodb://localhost:27017/')
-mongo_client = MongoClient("mongodb+srv://admin:admin@tweets.8ugzv.mongodb.net/tweets?retryWrites=true&w=majority")
+mongo_client = MongoClient("mongodb://admin:admin@tweets.8ugzv.mongodb.net/tweets?retryWrites=true&w=majority")
 class MyMongo(object):
     def __init__(self, db_name):
         self.db_name = db_name
@@ -447,4 +447,4 @@ def before_request_func():
 # https://pythonise.com/series/learning-flask/building-a-flask-app-with-docker-compose
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5001)
